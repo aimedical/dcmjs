@@ -126,15 +126,26 @@ class DicomMessage {
                 if (cleanTagString === "00080005") {
                     if (readInfo.values.length > 0) {
                         let coding = readInfo.values[0];
+
+                        //先頭が省略文字の時
+                        if(readInfo.values[0] === ''){
+                            coding = 'ISO 2022 IR 6';
+                            if(readInfo.values.length > 1){
+                                for(let charIndex = 1; readInfo.values.length; i++){
+                                    if(readInfo.values[charIndex] in encodingMapping){
+                                        coding = readInfo.values[charIndex];
+                                    }
+                                }
+                            }
+                        }
+
                         if(readInfo.values.indexOf('ISO 2022 IR 87') !== -1){
                             coding = readInfo.values[readInfo.values.indexOf('ISO 2022 IR 87')]
                         }else if(readInfo.values.indexOf('ISO 2022 IR 13') !== -1){
                             coding = readInfo.values[readInfo.values.indexOf('ISO 2022 IR 13')]
                         }else if(readInfo.values.indexOf('ISO IR 13') !== -1){
                             coding = readInfo.values[readInfo.values.indexOf('ISO IR 13')]
-                        }else if(readInfo.values.indexOf('') !== -1){
-                            coding = 'ISO 2022 IR 6'                            
-                        }
+                        }                
 
                         coding = coding.replace(/[_ ]/g, "-").toLowerCase();
                         if (coding in encodingMapping) {
@@ -144,12 +155,9 @@ class DicomMessage {
                             log.warn(
                                 `Unsupported character set: ${coding}, using default character set`
                             );
-                        }
-                        /*
-                         else {
+                        } else {
                             throw Error(`Unsupported character set: ${coding}`);
                         }
-                            */
                     }
                     
                     if (readInfo.values.length > 1) {
