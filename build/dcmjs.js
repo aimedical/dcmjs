@@ -10385,22 +10385,22 @@
 	              var coding = readInfo.values[0];
 
 	              //先頭が省略文字の時
-	              if (readInfo.values[0] === '') {
-	                coding = 'ISO 2022 IR 6';
+	              if (readInfo.values[0] === "") {
+	                coding = "ISO 2022 IR 6";
 	                if (readInfo.values.length > 1) {
-	                  for (var charIndex = 1; readInfo.values.length; i++) {
+	                  for (var charIndex = 1; readInfo.values.length; charIndex++) {
 	                    if (readInfo.values[charIndex] in encodingMapping) {
 	                      coding = readInfo.values[charIndex];
 	                    }
 	                  }
 	                }
 	              }
-	              if (readInfo.values.indexOf('ISO 2022 IR 87') !== -1) {
-	                coding = readInfo.values[readInfo.values.indexOf('ISO 2022 IR 87')];
-	              } else if (readInfo.values.indexOf('ISO 2022 IR 13') !== -1) {
-	                coding = readInfo.values[readInfo.values.indexOf('ISO 2022 IR 13')];
-	              } else if (readInfo.values.indexOf('ISO IR 13') !== -1) {
-	                coding = readInfo.values[readInfo.values.indexOf('ISO IR 13')];
+	              if (readInfo.values.indexOf("ISO 2022 IR 87") !== -1) {
+	                coding = readInfo.values[readInfo.values.indexOf("ISO 2022 IR 87")];
+	              } else if (readInfo.values.indexOf("ISO 2022 IR 13") !== -1) {
+	                coding = readInfo.values[readInfo.values.indexOf("ISO 2022 IR 13")];
+	              } else if (readInfo.values.indexOf("ISO IR 13") !== -1) {
+	                coding = readInfo.values[readInfo.values.indexOf("ISO IR 13")];
 	              }
 	              coding = coding.replace(/[_ ]/g, "-").toLowerCase();
 	              if (coding in encodingMapping) {
@@ -10417,12 +10417,12 @@
 	                log.warn("Using multiple character sets is not supported, proceeding with just the first character set", readInfo.values);
 	              }
 	              /*
-	              else {
-	              throw Error(
-	                  `Using multiple character sets is not supported: ${readInfo.values}`
-	              );
+	               else {
+	                  throw Error(
+	                      `Using multiple character sets is not supported: ${readInfo.values}`
+	                  );
 	              }
-	              */
+	                  */
 	            }
 
 	            readInfo.values = ["ISO_IR 192"]; // change SpecificCharacterSet to UTF-8

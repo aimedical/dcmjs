@@ -128,24 +128,44 @@ class DicomMessage {
                         let coding = readInfo.values[0];
 
                         //先頭が省略文字の時
-                        if(readInfo.values[0] === ''){
-                            coding = 'ISO 2022 IR 6';
-                            if(readInfo.values.length > 1){
-                                for(let charIndex = 1; readInfo.values.length; i++){
-                                    if(readInfo.values[charIndex] in encodingMapping){
+                        if (readInfo.values[0] === "") {
+                            coding = "ISO 2022 IR 6";
+                            if (readInfo.values.length > 1) {
+                                for (
+                                    let charIndex = 1;
+                                    readInfo.values.length;
+                                    charIndex++
+                                ) {
+                                    if (
+                                        readInfo.values[charIndex] in
+                                        encodingMapping
+                                    ) {
                                         coding = readInfo.values[charIndex];
                                     }
                                 }
                             }
                         }
 
-                        if(readInfo.values.indexOf('ISO 2022 IR 87') !== -1){
-                            coding = readInfo.values[readInfo.values.indexOf('ISO 2022 IR 87')]
-                        }else if(readInfo.values.indexOf('ISO 2022 IR 13') !== -1){
-                            coding = readInfo.values[readInfo.values.indexOf('ISO 2022 IR 13')]
-                        }else if(readInfo.values.indexOf('ISO IR 13') !== -1){
-                            coding = readInfo.values[readInfo.values.indexOf('ISO IR 13')]
-                        }                
+                        if (readInfo.values.indexOf("ISO 2022 IR 87") !== -1) {
+                            coding =
+                                readInfo.values[
+                                    readInfo.values.indexOf("ISO 2022 IR 87")
+                                ];
+                        } else if (
+                            readInfo.values.indexOf("ISO 2022 IR 13") !== -1
+                        ) {
+                            coding =
+                                readInfo.values[
+                                    readInfo.values.indexOf("ISO 2022 IR 13")
+                                ];
+                        } else if (
+                            readInfo.values.indexOf("ISO IR 13") !== -1
+                        ) {
+                            coding =
+                                readInfo.values[
+                                    readInfo.values.indexOf("ISO IR 13")
+                                ];
+                        }
 
                         coding = coding.replace(/[_ ]/g, "-").toLowerCase();
                         if (coding in encodingMapping) {
@@ -159,7 +179,7 @@ class DicomMessage {
                             throw Error(`Unsupported character set: ${coding}`);
                         }
                     }
-                    
+
                     if (readInfo.values.length > 1) {
                         if (ignoreErrors) {
                             log.warn(
@@ -167,7 +187,7 @@ class DicomMessage {
                                 readInfo.values
                             );
                         }
-                            /*
+                        /*
                          else {
                             throw Error(
                                 `Using multiple character sets is not supported: ${readInfo.values}`
@@ -175,7 +195,7 @@ class DicomMessage {
                         }
                             */
                     }
-                    
+
                     readInfo.values = ["ISO_IR 192"]; // change SpecificCharacterSet to UTF-8
                 }
 
@@ -303,7 +323,9 @@ class DicomMessage {
 
         // apply VR specific formatting to the original _rawValue and compare to the Value
         const vr = ValueRepresentation.createByTypeString(vrType);
-        const originalValue = tagObject._rawValue.map((val) => vr.applyFormatting(val))
+        const originalValue = tagObject._rawValue.map(val =>
+            vr.applyFormatting(val)
+        );
 
         // if Value has not changed, write _rawValue unformatted back into the file
         if (deepEqual(tagObject.Value, originalValue)) {
@@ -392,18 +414,28 @@ class DicomMessage {
             var times = length / vr.maxLength,
                 i = 0;
             while (i++ < times) {
-                const { rawValue, value } = vr.read(stream, vr.maxLength, syntax, options);
+                const { rawValue, value } = vr.read(
+                    stream,
+                    vr.maxLength,
+                    syntax,
+                    options
+                );
                 rawValues.push(rawValue);
                 values.push(value);
             }
         } else {
-            const { rawValue, value } = vr.read(stream, length, syntax, options);
+            const { rawValue, value } = vr.read(
+                stream,
+                length,
+                syntax,
+                options
+            );
             if (!vr.isBinary() && singleVRs.indexOf(vr.type) == -1) {
                 rawValues = rawValue;
-                values = value
+                values = value;
                 if (typeof value === "string") {
                     const delimiterChar = String.fromCharCode(VM_DELIMITER);
-                    rawValues = vr.dropPadByte(rawValue.split(delimiterChar))
+                    rawValues = vr.dropPadByte(rawValue.split(delimiterChar));
                     values = vr.dropPadByte(value.split(delimiterChar));
                 }
             } else if (vr.type == "SQ") {
@@ -414,7 +446,9 @@ class DicomMessage {
                 values = value;
             } else {
                 Array.isArray(value) ? (values = value) : values.push(value);
-                Array.isArray(rawValue) ? (rawValues = rawValue) : rawValues.push(rawValue);
+                Array.isArray(rawValue)
+                    ? (rawValues = rawValue)
+                    : rawValues.push(rawValue);
             }
         }
         stream.setEndian(oldEndian);
