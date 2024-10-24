@@ -133,7 +133,7 @@ class DicomMessage {
                             if (readInfo.values.length > 1) {
                                 for (
                                     let charIndex = 1;
-                                    readInfo.values.length;
+                                    charIndex < readInfo.values.length;
                                     charIndex++
                                 ) {
                                     if (

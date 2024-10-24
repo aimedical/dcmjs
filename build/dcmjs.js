@@ -10388,7 +10388,7 @@
 	              if (readInfo.values[0] === "") {
 	                coding = "ISO 2022 IR 6";
 	                if (readInfo.values.length > 1) {
-	                  for (var charIndex = 1; readInfo.values.length; charIndex++) {
+	                  for (var charIndex = 1; charIndex < readInfo.values.length; charIndex++) {
 	                    if (readInfo.values[charIndex] in encodingMapping) {
 	                      coding = readInfo.values[charIndex];
 	                    }
